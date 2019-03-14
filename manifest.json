@@ -1,6 +1,11 @@
 {
-  "name": "Temp Name",
+  "name": "Getting Started Example",
   "version": "1.0",
-  "description": "Stay Active!",
+  "description": "Build an Extension!",
+  "permissions": ["storage"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
   "manifest_version": 2
 }
