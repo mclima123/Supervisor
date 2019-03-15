@@ -1,5 +1,5 @@
 .main {
-  width: 400px;
+  width: 235px;
   height: 300px;
   padding-right: 15px;
   padding-left: 15px;
@@ -9,10 +9,9 @@
   height: 100%
 }
 
-.col-xs-6 {
-  height: 100%;
-}
-
-.custom-border {
-  border-right: 1px solid #dadada;
+#blacklisted_sites_list {
+  overflow: auto;
+  height: 185px;
+  margin-top: 20px;
+  margin-bottom: 15px;
 }

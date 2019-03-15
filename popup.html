@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Getting Started building chrome Extensions</title>
+  <title>TEMP NAME</title>
 
   <!-- Bootstrap -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -15,21 +15,26 @@
 
 <body>
   <div class="main">
-    <div class="row">
-      <div class="col-xs-6 custom-border">
-        <h3 style='text-align: center'>Title</h3>
-      </div>
-      <div class="col-xs-6">
-        <h3 style='text-align: center'>Blacklist</h3>
-        <div class="input-group">
-          <input type="text" class="form-control">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">Add</button>
-          </span>
+    <div class="row" style="text-align: center">
+      <div class="col-xs-12">
+        <h4 id='title' style='text-align: center'>Blacklist</h4>
+        <div>
+          <input type="text" id='website_input' style='margin-bottom: 10px' class="form-control" placeholder="Website">
+          <button class="btn btn-primary" type="button" id='add_to_blacklist'>Add page</button>
+          <button class="btn btn-danger" type="button" id='remove_from_blacklist'>Remove page</button>
+        </div>
+        <div id='blacklisted_sites_list'>
+          <ul class="list-group" id="append_here">
+            <li class="list-group-item list-group-item-warning" id='website_name'>
+              <div>facebook.com</div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
+
+
 
   <!-- Scripts -->
   <script src="js/popup.js"></script>
