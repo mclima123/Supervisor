@@ -1,0 +1,18 @@
+.main {
+  width: 400px;
+  height: 300px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.row {
+  height: 100%
+}
+
+.col-xs-6 {
+  height: 100%;
+}
+
+.custom-border {
+  border-right: 1px solid #dadada;
+}
