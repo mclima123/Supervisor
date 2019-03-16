@@ -15,6 +15,27 @@ function runEverySecond(){
       isBlacklistedUrlOpen(tabs[0])
     }
     console.log("timer: " + timer);
+  })
+}
+
+
+//confirmed this changes the icon
+chrome.browserAction.setIcon({
+  path: "images/green_128.png" //any icon in the folder
+});
+
+chrome.runtime.onInstalled.addListener(function () {
+  chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
+    chrome.declarativeContent.onPageChanged.addRules([{
+      conditions: [new chrome.declarativeContent.PageStateMatcher({
+        pageUrl: {
+          //add social media sites here
+          urlMatches: '(facebook|instagram|twitter).com',
+        },
+      })
+      ],
+      actions: [new chrome.declarativeContent.ShowPageAction()]
+    }]);
   });
 
   if(timer == MAX_TIME)
@@ -22,7 +43,7 @@ function runEverySecond(){
     alert("test boi");
     timer -= MAX_TIME; // timer = 0 doesn't reset it god bless
   }
-}
+})
 
 function isBlacklistedUrlOpen(current_tab){
   let blacklist = []

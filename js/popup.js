@@ -1,34 +1,52 @@
 let blacklist = [];
-getBlacklist();
+let defaults = [
+  "facebook.com",
+  "instagram.com",
+  "twitter.com"
+];
 
-document.getElementById('add_to_blacklist').addEventListener("click", addToBlacklist);
-document.getElementById('remove_from_blacklist').addEventListener("click", removeFromBlacklist);
-document.getElementById('title').addEventListener("click", clearStorage);
-
-function addToBlacklist() {
-  let website = document.getElementById('website_input').value;
-
-  if (!blacklist.includes(website) && website !== "") {
-    let list = document.getElementById('append_here');
-    let child = document.createElement("div");
-    child.innerHTML = "<li class='list-group-item list-group-item-success'><div id='website_name'>" + website + "</div><button id='removeButton'>remove</button></li>"
-    blacklist.push(website);
-    saveBlacklist();
-    list.append(child);
-    //console.log('teste');
-  }
-}
-
-function removeFromBlacklist() {
-  
-}
-
-
-
+initialize();
 
 
 
 //--------------------------//
+
+function removeFromBlacklist() {
+  let website = document.getElementById('website_input').value;
+
+  if (blacklist.includes(website) && website !== "") {
+    blacklist.splice(blacklist.indexOf(website), 1);
+    saveBlacklist();
+    clearULList();
+    populateList();
+    document.getElementById('website_input').value = '';
+  }
+
+  console.log(blacklist);
+}
+
+function clearULList() {
+  document.getElementById("append_here").remove();
+  let new_list = document.createElement("ul");
+  new_list.className = "list-group";
+  new_list.id = "append_here";
+  document.getElementById("blacklisted_sites_list").appendChild(new_list);
+}
+
+function initialize() {
+  getBlacklist();
+
+  if (localStorage.getItem('firstTime') !== 'false') {
+    addDefaults();
+    localStorage.setItem('firstTime', false);
+  }
+
+  populateList();
+
+  document.getElementById('add_to_blacklist').addEventListener("click", addToBlacklist);
+  document.getElementById('remove_from_blacklist').addEventListener("click", removeFromBlacklist);
+  document.getElementById('title').addEventListener("click", clearStorage);
+}
 
 function getBlacklist() {
   let aux = localStorage.getItem('blacklist');
@@ -37,13 +55,51 @@ function getBlacklist() {
   console.log(blacklist);
 }
 
+function addToBlacklist() {
+  let website = document.getElementById('website_input').value;
+
+  if (!blacklist.includes(website) && website !== "") {
+    blacklist.push(website);
+    saveBlacklist();
+    clearULList();
+    populateList();
+    document.getElementById('website_input').value = '';
+  }
+
+  console.log(blacklist);
+}
+
 function clearStorage() {
-  localStorage.clear();
-  blacklist = [];
+  localStorage.clear(); //clear storage
+  blacklist = []; //clear the array
+  clearULList(); //clear the ul list
+  localStorage.setItem('firstTime', false);
 }
 
 function saveBlacklist() {
   localStorage.setItem('blacklist', JSON.stringify(blacklist));
+}
+
+function addDefaults() {
+  defaults.forEach(element => {
+    if (!blacklist.includes(element)) {
+      blacklist.push(element);
+    }
+  });
+
+  saveBlacklist();
+}
+
+function populateList() {
+  let list = document.getElementById('append_here');
+
+  blacklist.forEach(element => {
+    let child = document.createElement("li");
+    child.innerHTML = "<div id='id_placeholder'>" + element + "</div>"
+    child.className = "list-group-item list-group-item-warning";
+    child.id = element;
+    list.append(child);
+  });
 }
 
 //--------------------------//
