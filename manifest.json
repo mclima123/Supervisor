@@ -30,8 +30,7 @@
   "background": {
     "scripts": [
       "js/background.js"
-    ],
-    "persistent": false
+    ]
   },
   "icons": {
     "128": "images/gray_128.png"

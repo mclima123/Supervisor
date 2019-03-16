@@ -57,6 +57,12 @@ function getBlacklist() {
 
 function addToBlacklist() {
   let website = document.getElementById('website_input').value;
+  
+  if(website[website.length-1] != '/'){
+    website += "/";
+  }
+
+  website = getURLDomain(website);
 
   if (!blacklist.includes(website) && website !== "") {
     blacklist.push(website);
@@ -100,6 +106,20 @@ function populateList() {
     child.id = element;
     list.append(child);
   });
+}
+
+function getURLDomain(url)
+{
+  var splitsHttp = url.split("://")       // http + <rest of the url>
+  var splitsWww = "";
+  if(splitsHttp[0].length == url.length){
+    splitsWww = url.split("/");
+  }
+  else{
+    splitsWww = splitsHttp[1].split("/")  // site.com + page identifier
+  }
+
+  return splitsWww[0];
 }
 
 //--------------------------//
