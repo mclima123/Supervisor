@@ -8,7 +8,7 @@ document.getElementById('title').addEventListener("click", clearStorage);
 function addToBlacklist() {
   let website = document.getElementById('website_input').value;
 
-  if (!blacklist.includes(website)) {
+  if (!blacklist.includes(website) && website !== "") {
     let list = document.getElementById('append_here');
     let child = document.createElement("div");
     child.innerHTML = "<li class='list-group-item list-group-item-success'><div id='website_name'>" + website + "</div><button id='removeButton'>remove</button></li>"
