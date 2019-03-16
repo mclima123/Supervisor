@@ -2,7 +2,7 @@
 //window.alert("teste");
 const MAX_TIME = 3600; //em segundos   3600s -> 1h
 var timer = 0;
-var badTabsOpen;
+var badTabsOpen = 0;
 var colour;
 var t = setInterval(runEverySecond, 1000);
 
@@ -12,20 +12,21 @@ function runEverySecond(){
     if(tabs.length != 0){
       isBlacklistedUrlOpen(getURLDomain(tabs[0].url))
     }
-    console.log("timer: " + timer);
+    //console.log("timer: " + timer);
   })
 
-  chrome.tabs.query({  }, function (tabs) {
+  chrome.tabs.query({ currentWindow: true }, function (tabs) {
+    badTabsOpen = 0;
+    
     for(let i=0; i<tabs.length; i++){
-      badTabsOpen = isBlacklistedTabOpen(getURLDomain(tabs[i].url));
+      badTabsOpen += isBlacklistedTabOpen(getURLDomain(tabs[i].url));
     }
+    if(badTabsOpen > 0){
+      chrome.browserAction.setBadgeText({text: "" + badTabsOpen});
+    }
+    console.log("bad tabs: "+badTabsOpen);
+    //console.log("timer: " + timer);
   })
-
-  if(badTabsOpen > 0){
-    chrome.browserAction.setBadgeText({text: "" + badTabsOpen});
-  }
-
-
 
   if( timer < (MAX_TIME/3) ){ // tempo < 33%
     colour = "green"
@@ -74,8 +75,6 @@ function isBlacklistedUrlOpen(currentUrl){
     if (currentUrl[currentUrl.length-1] === '/'){
       currentUrl.splice(currentUrl.length-1, 1)
     }
-    //console.log("site: " + blacklist[i]);
-    //console.log("current: " + currentUrl);
     if(currentUrl === blacklist[i])
       timer++;
   }
@@ -94,8 +93,10 @@ function isBlacklistedTabOpen(currentUrl){
       currentUrl.splice(currentUrl.length-1, 1)
     }
 
-    if(currentUrl === blacklist[i])
+    if(currentUrl === blacklist[i]){
       count++;
+      console.log("BAD TAB!!! " + currentUrl);
+    }
   }
 
   return count
