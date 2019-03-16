@@ -1,6 +1,6 @@
 //confirmed este alerta aparece a meio da janela
 //window.alert("teste");
-const MAX_TIME = 60; //em segundos
+const MAX_TIME = 3600; //em segundos   3600s -> 1h
 var timer = 0;
 var t = setInterval(runEverySecond, 1000);
 
@@ -10,12 +10,18 @@ var t = setInterval(runEverySecond, 1000);
 
 function runEverySecond(){
   chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-    console.log("tabs: " + tabs)
+    //console.log("tabs: " + tabs)
     if(tabs.length != 0){
-      isBlacklistedUrlOpen(tabs[0])
+      isBlacklistedUrlOpen(getURLDomain(tabs[0].url))
     }
-    console.log("timer: " + timer);
+    //console.log("timer: " + timer);
   })
+
+  if(timer == MAX_TIME)
+  {
+    alert("test boi");
+    timer -= MAX_TIME; // timer = 0 doesn't reset it god bless
+  }
 }
 
 
@@ -24,43 +30,34 @@ chrome.browserAction.setIcon({
   path: "images/green_128.png" //any icon in the folder
 });
 
-chrome.runtime.onInstalled.addListener(function () {
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
-    chrome.declarativeContent.onPageChanged.addRules([{
-      conditions: [new chrome.declarativeContent.PageStateMatcher({
-        pageUrl: {
-          //add social media sites here
-          urlMatches: '(facebook|instagram|twitter).com',
-        },
-      })
-      ],
-      actions: [new chrome.declarativeContent.ShowPageAction()]
-    }]);
-  });
-
-  if(timer == MAX_TIME)
-  {
-    alert("test boi");
-    timer -= MAX_TIME; // timer = 0 doesn't reset it god bless
-  }
-})
-
-function isBlacklistedUrlOpen(current_tab){
+function isBlacklistedUrlOpen(currentUrl){
   let blacklist = []
   let aux = localStorage.getItem('blacklist')
   blacklist = aux == null ? blacklist : JSON.parse(aux)
 
   for(let i=0; i<blacklist.length; i++)
   {
-    console.log("site: " + blacklist[i]);
-    console.log("current: " + current_tab.url);
-    if(current_tab.url === blacklist[i])
+    // if it ends with '.com/' then make '.com'
+    if (currentUrl[currentUrl.length-1] === '/'){
+      currentUrl.splice(currentUrl.length-1, 1)
+    }
+    //console.log("site: " + blacklist[i]);
+    //console.log("current: " + currentUrl);
+    if(currentUrl === blacklist[i])
       timer++;
   }
 }
 
-function getURLDomain(url){
-  var splits = url.split("://")       // http + <rest of the url>
-  var splits2 = splits[1].split("/")  // site.com + page identifier
-  return splits[0] + "://" + splits2[0];
+function getURLDomain(url)
+{
+  var splitsHttp = url.split("://")       // http + <rest of the url>
+  var splitsWww = "";
+  if(splitsHttp[0].length == url.length){
+    splitsWww = url.split("/");
+  }
+  else{
+    splitsWww = splitsHttp[1].split("/")  // site.com + page identifier
+  }
+
+  return splitsWww[0];
 }
