@@ -2,11 +2,8 @@
 //window.alert("teste");
 const MAX_TIME = 3600; //em segundos   3600s -> 1h
 var timer = 0;
+var colour;
 var t = setInterval(runEverySecond, 1000);
-
-/*chrome.tabs.onUpdated.addListener(function(info){
-  getAllOpenWindows(window);
-});*/
 
 function runEverySecond(){
   chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -17,6 +14,29 @@ function runEverySecond(){
     //console.log("timer: " + timer);
   })
 
+  if( timer < (MAX_TIME/3) ){ // tempo < 33%
+    colour = "green"
+    setColour()
+  } else if ( timer > (MAX_TIME/3) && timer < (2*MAX_TIME/3) ){ // 33% > tempo < 66%
+    colour = "yellow"
+    setColour()
+  } else if ( timer > (2*MAX_TIME/3) ){ // tempo > 66%
+    colour = "red"
+    setColour()
+  } else if ( timer > (2*MAX_TIME/3) ){ // tempo > 90%
+    if(colour === "red")
+    {
+      colour = "gray";
+      setColour()
+    }
+    else
+    {
+      colour = "red";
+      setColour();
+    }
+  }
+  console.log(chrome.browserAction.getIcon);
+
   if(timer == MAX_TIME)
   {
     alert("test boi");
@@ -24,11 +44,12 @@ function runEverySecond(){
   }
 }
 
-
-//confirmed this changes the icon
-chrome.browserAction.setIcon({
-  path: "images/green_128.png" //any icon in the folder
-});
+// colour = "green" | "yellow" | "red"
+function setColour(){
+  chrome.browserAction.setIcon({
+    path: "images/" + colour + "_128.png" //any icon in the folder
+  });
+}
 
 function isBlacklistedUrlOpen(currentUrl){
   let blacklist = []
