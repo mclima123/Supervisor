@@ -4,28 +4,29 @@ const MAX_TIME = 3600; //em segundos   3600s -> 1h
 var timer = 0;
 var badTabsOpen = 0;
 var colour;
-var t = setInterval(runEverySecond, 1000);
+setInterval(runEverySecond, 1000);
 
 function runEverySecond(){
   chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-    //console.log("tabs: " + tabs)
     if(tabs.length != 0){
       isBlacklistedUrlOpen(getURLDomain(tabs[0].url))
     }
-    //console.log("timer: " + timer);
+    console.log("timer: " + timer);
   })
 
   chrome.tabs.query({ currentWindow: true }, function (tabs) {
-    badTabsOpen = 0;
+    badTabsOpen -= badTabsOpen;
     
     for(let i=0; i<tabs.length; i++){
       badTabsOpen += isBlacklistedTabOpen(getURLDomain(tabs[i].url));
     }
-    if(badTabsOpen > 0){
+
+    if(badTabsOpen == 0){
+      chrome.browserAction.setBadgeText({text: ""});
+    }
+    else {
       chrome.browserAction.setBadgeText({text: "" + badTabsOpen});
     }
-    console.log("bad tabs: "+badTabsOpen);
-    //console.log("timer: " + timer);
   })
 
   if( timer < (MAX_TIME/3) ){ // tempo < 33%
@@ -95,7 +96,6 @@ function isBlacklistedTabOpen(currentUrl){
 
     if(currentUrl === blacklist[i]){
       count++;
-      console.log("BAD TAB!!! " + currentUrl);
     }
   }
 
