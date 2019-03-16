@@ -1,6 +1,6 @@
 //confirmed este alerta aparece a meio da janela
 //window.alert("teste");
-
+const MAX_TIME = 60; //em segundos
 var timer = 0;
 var t = setInterval(runEverySecond, 1000);
 
@@ -10,12 +10,18 @@ var t = setInterval(runEverySecond, 1000);
 
 function runEverySecond(){
   chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-    console.log(tabs)
+    console.log("tabs: " + tabs)
     if(tabs.length != 0){
       isBlacklistedUrlOpen(tabs[0])
     }
-    console.log(timer);
+    console.log("timer: " + timer);
   });
+
+  if(timer == MAX_TIME)
+  {
+    alert("test boi");
+    timer -= MAX_TIME; // timer = 0 doesn't reset it god bless
+  }
 }
 
 function isBlacklistedUrlOpen(current_tab){
@@ -23,7 +29,7 @@ function isBlacklistedUrlOpen(current_tab){
   let aux = localStorage.getItem('blacklist')
   blacklist = aux == null ? blacklist : JSON.parse(aux)
 
-  for(var i=0; i<blacklist.length; i++)
+  for(let i=0; i<blacklist.length; i++)
   {
     console.log("site: " + blacklist[i]);
     console.log("current: " + current_tab.url);
