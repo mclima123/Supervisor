@@ -2,6 +2,7 @@
 //window.alert("teste");
 const MAX_TIME = 3600; //em segundos   3600s -> 1h
 var timer = 0;
+var badTabsOpen;
 var colour;
 var t = setInterval(runEverySecond, 1000);
 
@@ -11,8 +12,20 @@ function runEverySecond(){
     if(tabs.length != 0){
       isBlacklistedUrlOpen(getURLDomain(tabs[0].url))
     }
-    //console.log("timer: " + timer);
+    console.log("timer: " + timer);
   })
+
+  chrome.tabs.query({  }, function (tabs) {
+    for(let i=0; i<tabs.length; i++){
+      badTabsOpen = isBlacklistedTabOpen(getURLDomain(tabs[i].url));
+    }
+  })
+
+  if(badTabsOpen > 0){
+    chrome.browserAction.setBadgeText({text: "" + badTabsOpen});
+  }
+
+
 
   if( timer < (MAX_TIME/3) ){ // tempo < 33%
     colour = "green"
@@ -23,7 +36,7 @@ function runEverySecond(){
   } else if ( timer > (2*MAX_TIME/3) ){ // tempo > 66%
     colour = "red"
     setColour()
-  } else if ( timer > (2*MAX_TIME/3) ){ // tempo > 90%
+  } else if ( timer > (9*MAX_TIME/10) ){ // tempo > 90%
     if(colour === "red")
     {
       colour = "gray";
@@ -35,7 +48,6 @@ function runEverySecond(){
       setColour();
     }
   }
-  console.log(chrome.browserAction.getIcon);
 
   if(timer == MAX_TIME)
   {
@@ -67,6 +79,26 @@ function isBlacklistedUrlOpen(currentUrl){
     if(currentUrl === blacklist[i])
       timer++;
   }
+}
+
+function isBlacklistedTabOpen(currentUrl){
+  let blacklist = []
+  let count = 0;
+  let aux = localStorage.getItem('blacklist')
+  blacklist = aux == null ? blacklist : JSON.parse(aux)
+
+  for(let i=0; i<blacklist.length; i++)
+  {
+    // if it ends with '.com/' then make '.com'
+    if (currentUrl[currentUrl.length-1] === '/'){
+      currentUrl.splice(currentUrl.length-1, 1)
+    }
+
+    if(currentUrl === blacklist[i])
+      count++;
+  }
+
+  return count
 }
 
 function getURLDomain(url)
