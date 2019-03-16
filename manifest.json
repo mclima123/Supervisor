@@ -19,5 +19,8 @@
     ],
     "persistent": false
   },
+  "icons": {
+    "128": "images/gray_128.png"
+  },
   "manifest_version": 2
 }
