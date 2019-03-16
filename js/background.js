@@ -21,13 +21,17 @@ function runEverySecond(){
 function isBlacklistedUrlOpen(current_tab){
   let blacklist = []
   let aux = localStorage.getItem('blacklist')
+  //console.log("aux: "+aux);
   blacklist = aux == null ? blacklist : JSON.parse(aux)
+  if(aux != null){
+    blacklist = aux;}
+  //console.log("blacklist: "+blacklist);
 
-  for(var site in blacklist)
+  for(var i=0; i<blacklist.length; i++)
   {
-    console.log("site: " + site);
+    console.log("site: " + blacklist[i]);
     console.log("current: " + current_tab.url);
-    if(current_tab.url == site)
+    if(current_tab.url === blacklist[i])
       timer++;
   }
 }
