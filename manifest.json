@@ -15,7 +15,8 @@
   "permissions": [
     "storage",
     "declarativeContent",
-    "activeTab"
+    "activeTab",
+    "tabs"
   ],
   "options_page": "options.html",
   "background": {

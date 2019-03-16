@@ -20,7 +20,7 @@ function addToBlacklist() {
 }
 
 function removeFromBlacklist() {
-
+  
 }
 
 
