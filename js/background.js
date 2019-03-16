@@ -1,61 +1,34 @@
 //confirmed este alerta aparece a meio da janela
 //window.alert("teste");
-var timer = []
-var tabs = []
-var timerRunning = false;
 
-//#region 
-/*chrome.runtime.onInstalled.addListener(function () {
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
-    chrome.declarativeContent.onPageChanged.addRules([{
-      conditions: [new chrome.declarativeContent.PageStateMatcher({
-        pageUrl: {
-          //add social media sites here
-          urlMatches: '(facebook|instagram|twitter).com',
-        },
-      })
-      ],
-      actions: [new chrome.declarativeContent.ShowPageAction()]
-    }]);
-  });
+var timer = 0;
+var t = setInterval(runEverySecond, 1000);
+
+/*chrome.tabs.onUpdated.addListener(function(info){
+  getAllOpenWindows(window);
 });*/
-//#endregion
 
-chrome.tabs.onUpdated.addListener(function(info){
-  console.log("here");
-});
-
-chrome.windows.getAll({populate:true}, getAllOpenWindows);
-
-function getAllOpenWindows(winData) {
-
-  for (var i in winData) {
-    if (winData[i].focused === true) {
-        var winTabs = winData[i].tabs;
-        var totTabs = winTabs.length;
-        for (var j=0; j<totTabs;j++) {
-          if(winTabs[j].url.startsWith("http")){
-            tabs.push(getURLDomain(winTabs[j].url));
-            isBlacklistedUrlOpen();
-          }
-        }
+function runEverySecond(){
+  chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+    console.log(tabs)
+    if(tabs.length != 0){
+      isBlacklistedUrlOpen(tabs[0])
     }
-  }
-  console.log(tabs);
+    console.log(timer);
+  });
 }
 
-function isBlacklistedUrlOpen(){
-  let blacklist = [];
-  let aux = localStorage.getItem('blacklist');
-  blacklist = aux == null ? blacklist : JSON.parse(aux);
+function isBlacklistedUrlOpen(current_tab){
+  let blacklist = []
+  let aux = localStorage.getItem('blacklist')
+  blacklist = aux == null ? blacklist : JSON.parse(aux)
 
-  for(var tab in tabs)
+  for(var site in blacklist)
   {
-    for(var site in blacklist)
-    {
-      if(tab == site)
-        timerRunning = true;
-    }
+    console.log("site: " + site);
+    console.log("current: " + current_tab.url);
+    if(current_tab.url == site)
+      timer++;
   }
 }
 
