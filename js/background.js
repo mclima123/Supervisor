@@ -32,6 +32,7 @@ function runEverySecond() {
 
   if (timer < (MAX_TIME / 3)) { // tempo < 33%
     colour = "green"
+    setColour();
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
       chrome.tabs.executeScript(
         tabs[0].id,
