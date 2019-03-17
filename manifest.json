@@ -1,25 +1,24 @@
 {
-  "name": "TEMP NAME",
+  "name": "Supervisor",
   "version": "1.0",
-  "description": "Build an Extension!",
+  "description": "Supervise how long you stay in bad websites!",
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "TEMP NAME",
+    "default_title": "Supervisor",
     "default_icon": "images/gray_128.png"
   },
   "permissions": [
     "storage",
     "declarativeContent",
     "activeTab",
-    "tabs"
+    "tabs",
+    "http://*/",
+    "https://*/"
   ],
   "content_scripts": [
     {
       "matches": [
         "<all_urls>"
-      ],
-      "css": [
-        "css/custom.css"
       ],
       "js": [
         "js/content.js"

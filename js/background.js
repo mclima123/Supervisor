@@ -1,9 +1,10 @@
 //confirmed este alerta aparece a meio da janela
 //window.alert("teste");
-const MAX_TIME = 3600; //em segundos   3600s -> 1h
+const MAX_TIME = 20; //em segundos   3600s -> 1h
 var timer = 0;
 var badTabsOpen = 0;
 var colour;
+var prevRand = 0;
 setInterval(runEverySecond, 1000);
 
 function runEverySecond() {
@@ -31,17 +32,32 @@ function runEverySecond() {
 
   if (timer < (MAX_TIME / 3)) { // tempo < 33%
     colour = "green"
-    setColour()
+    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+      chrome.tabs.executeScript(
+        tabs[0].id,
+        { code: 'document.body.style.backgroundColor = "#FFFFFF";' });
+    })
+
   } else if (timer > (MAX_TIME / 3) && timer < (2 * MAX_TIME / 3)) { // 33% > tempo < 66%
     colour = "yellow"
-    setColour()
-  } else if (timer > (2 * MAX_TIME / 3)) { // tempo > 66%
+    setColour();
+    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+      chrome.tabs.executeScript(
+        tabs[0].id,
+        { code: 'document.body.style.backgroundColor = "#F3F781";' });
+    })
+  } else if (timer > (2 * MAX_TIME / 3) && timer < (8 * MAX_TIME / 10)) { // 66% > tempo < 80%
     colour = "red"
-    setColour()
-  } else if (timer > (9 * MAX_TIME / 10)) { // tempo > 90%
+    setColour();
+    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+      chrome.tabs.executeScript(
+        tabs[0].id,
+        { code: 'document.body.style.backgroundColor = "#FD7878";' });
+    })
+  } else if (timer > (8 * MAX_TIME / 10)) { // tempo > 80%
     if (colour === "red") {
       colour = "gray";
-      setColour()
+      setColour();
     }
     else {
       colour = "red";
@@ -50,8 +66,32 @@ function runEverySecond() {
   }
 
   if (timer == MAX_TIME) {
-    alert("test boi");
+    let random;
+    do {
+      random = Math.floor((Math.random() * 5) + 1);
+    } while (prevRand === random);
+
+    prevRand = random;
+    doAlert(random);
     timer -= MAX_TIME; // timer = 0 doesn't reset it god bless
+  }
+}
+
+function doAlert(rand) {
+  if (rand == 1) {
+    alert('The weather is nice today. Perfect for a quick walk.\n\nCurrent temperature: 21ºC');
+  }
+  else if (rand == 2) {
+    alert('There are some events near you:\n\n - Party at SomeDisco at 14h\n - Sunset at SomeBeach at 18h');
+  }
+  else if (rand == 3) {
+    alert('"The greatest amount of wasted time is the time not getting started."');
+  }
+  else if (rand == 4) {
+    alert('"A year from now, you\'ll wish you had started today."');
+  }
+  else {
+    alert('"The secret of getting ahead is getting started."');
   }
 }
 

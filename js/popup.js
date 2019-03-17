@@ -1,7 +1,7 @@
 let blacklist = [];
 let defaults = [
-  "facebook.com",
-  "instagram.com",
+  "www.facebook.com",
+  "www.instagram.com",
   "twitter.com"
 ];
 
