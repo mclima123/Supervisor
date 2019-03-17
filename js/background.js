@@ -1,6 +1,6 @@
 //confirmed este alerta aparece a meio da janela
 //window.alert("teste");
-const MAX_TIME = 20; //em segundos   3600s -> 1h
+const MAX_TIME = 600; //em segundos   3600s -> 1h
 var timer = 0;
 var badTabsOpen = 0;
 var colour;
