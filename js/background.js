@@ -1,6 +1,6 @@
 //confirmed este alerta aparece a meio da janela
 //window.alert("teste");
-const MAX_TIME = 600; //em segundos   3600s -> 1h
+const MAX_TIME = 30; //em segundos   3600s -> 1h
 var timer = 0;
 var badTabsOpen = 0;
 var colour;
@@ -32,10 +32,11 @@ function runEverySecond() {
 
   if (timer < (MAX_TIME / 3)) { // tempo < 33%
     colour = "green"
+    setColour();
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
       chrome.tabs.executeScript(
         tabs[0].id,
-        { code: 'document.body.style.backgroundColor = "#FFFFFF";' });
+        { code: 'document.getElementById("camadaCor").style.backgroundColor = "rgba(255, 255, 255, 0)"' });
     })
 
   } else if (timer > (MAX_TIME / 3) && timer < (2 * MAX_TIME / 3)) { // 33% > tempo < 66%
@@ -44,7 +45,7 @@ function runEverySecond() {
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
       chrome.tabs.executeScript(
         tabs[0].id,
-        { code: 'document.body.style.backgroundColor = "#F3F781";' });
+        { code: 'document.getElementById("camadaCor").style.backgroundColor = "rgba(243,247,129, 0.3)";' });
     })
   } else if (timer > (2 * MAX_TIME / 3) && timer < (8 * MAX_TIME / 10)) { // 66% > tempo < 80%
     colour = "red"
@@ -52,7 +53,7 @@ function runEverySecond() {
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
       chrome.tabs.executeScript(
         tabs[0].id,
-        { code: 'document.body.style.backgroundColor = "#FD7878";' });
+        { code: 'document.getElementById("camadaCor").style.backgroundColor = "rgba(253,120,120, 0.3)";' });
     })
   } else if (timer > (8 * MAX_TIME / 10)) { // tempo > 80%
     if (colour === "red") {

@@ -15,10 +15,26 @@
     "http://*/",
     "https://*/"
   ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "css": [
+        "css/custom.css"
+      ],
+      "js": [
+        "js/contentScript.js"
+      ]
+    }
+  ],
   "options_page": "options.html",
   "background": {
     "scripts": [
       "js/background.js"
+    ],
+    "css": [
+      "css/custom.css"
     ]
   },
   "icons": {
