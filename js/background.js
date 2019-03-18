@@ -1,6 +1,6 @@
 //confirmed este alerta aparece a meio da janela
 //window.alert("teste");
-const MAX_TIME = 30; //em segundos   3600s -> 1h
+const MAX_TIME = 3600; //em segundos   3600s -> 1h
 var timer = 0;
 var badTabsOpen = 0;
 var colour;
@@ -30,7 +30,7 @@ function runEverySecond() {
     }
   })
 
-  if (timer < (MAX_TIME / 3)) { // tempo < 33%
+  if (timer < (MAX_TIME / 2)) { // tempo < 50%
     colour = "green"
     setColour();
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -39,7 +39,7 @@ function runEverySecond() {
         { code: 'document.getElementById("camadaCor").style.backgroundColor = "rgba(255, 255, 255, 0)"' });
     })
 
-  } else if (timer > (MAX_TIME / 3) && timer < (2 * MAX_TIME / 3)) { // 33% > tempo < 66%
+  } else if (timer > (MAX_TIME / 2) && timer < (3 * MAX_TIME / 4)) { // 50% > tempo < 75%
     colour = "yellow"
     setColour();
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -47,7 +47,7 @@ function runEverySecond() {
         tabs[0].id,
         { code: 'document.getElementById("camadaCor").style.backgroundColor = "rgba(243,247,129, 0.3)";' });
     })
-  } else if (timer > (2 * MAX_TIME / 3) && timer < (8 * MAX_TIME / 10)) { // 66% > tempo < 80%
+  } else if (timer > (3 * MAX_TIME / 4) && timer < (9 * MAX_TIME / 10)) { // 75% > tempo < 90%
     colour = "red"
     setColour();
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -55,7 +55,7 @@ function runEverySecond() {
         tabs[0].id,
         { code: 'document.getElementById("camadaCor").style.backgroundColor = "rgba(253,120,120, 0.3)";' });
     })
-  } else if (timer > (8 * MAX_TIME / 10)) { // tempo > 80%
+  } else if (timer > (9 * MAX_TIME / 10)) { // tempo > 90%
     if (colour === "red") {
       colour = "gray";
       setColour();
@@ -74,7 +74,7 @@ function runEverySecond() {
 
     prevRand = random;
     doAlert(random);
-    timer -= MAX_TIME; // timer = 0 doesn't reset it god bless
+    timer -= timer; // timer = 0 doesn't reset it god bless
   }
 }
 
